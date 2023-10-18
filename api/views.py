@@ -3,14 +3,15 @@ from rest_framework.response import Response
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from .serializer import PessoaSerializer
+from drf_yasg.utils import swagger_auto_schema
 
-
-
+@swagger_auto_schema(method='post', request_body=PessoaSerializer)
 @api_view(['POST'])
 def registar_pessoa(request):
+   """
+    Esse endpoint registra pessoa:
+    """
    serializer = PessoaSerializer(data=request.data)
-
-
    if serializer.is_valid():
        customer = serializer.data.get('name')
        income = float(serializer.data.get('income'))
@@ -20,6 +21,7 @@ def registar_pessoa(request):
        
        return Response(check_salario(income, customer, age, location))
    return (HttpResponse('Erro'))
+
 
 def check_salario(salario, customer, age, location):
     pessoal = {
